@@ -17,6 +17,10 @@
 
     ALTER USER SQL3 QUOTA UNLIMITED ON SQL3_TBS;
 /*PART3*/
+CREATE TYPE t_set_ref_sport as table of ref tsport;
+CREATE TYPE  t_set_ref_sportifs as table of ref tsportifs;
+CREATE type t_set_ref_gymnase as table of ref tgymnases;
+CREATE type t_set_ref_seance as table of ref tseance;
 /*5*/
 CREATE TYPE tsportifs as object(
     IDSPORTIF integer,
@@ -38,55 +42,61 @@ CREATE TYPE tentraineur under tsportifs(
 /
 
 create type tadresse as object(
-    rue varchar2(50), 
-    numero integer, 
-    ville varchar2(50),
-    pays varchar2(50), 
-    codepostal varchar2(5)
+    rue             varchar2(50), 
+    numero          integer, 
+    ville           varchar2(50),
+    pays            varchar2(50), 
+    codepostal      varchar2(5)
 );
 /
+
+
 CREATE TYPE tville AS OBJECT (
   VILLE VARCHAR(50)
+  ville_gymnases t_set_ref_gymnase
 );
 /
 
 CREATE TYPE tgymnases AS OBJECT (
-  IDGYMNASE INTEGER,
-  NOMGYMNASE VARCHAR(50),
-  ADRESSE tadresse,
-  VILLE REF tville,
-  SURFACE INTEGER
+  IDGYMNASE         INTEGER,
+  NOMGYMNASE        VARCHAR(50),
+  ADRESSE           tadresse,
+  VILLE REF         tville,
+  SURFACE           INTEGER,
+  gymnases_seance   t_set_ref_seance
 );
 /
 CREATE TYPE tsport AS OBJECT (
-  IDSPORT INTEGER,
-  LIBELLE VARCHAR(50)
+  IDSPORT           INTEGER,
+  LIBELLE           VARCHAR(50),
+  sport_sportif     t_set_ref_sportifs,
+  sport_seance      t_set_ref_seance
 );
 /   
 CREATE TYPE tseance AS OBJECT (
-  IDGYMNASE REF tgymnases,
-  IDSPORT REF tsport,
-  IDSPORTIFENTRAINEUR REF tsportifs,
-  JOUR VARCHAR(10),
-  HORAIRE REAL,
-  DUREE INTEGER
+  IDGYMNASE             REF tgymnases,
+  IDSPORT               REF tsport,
+  IDSPORTIFENTRAINEUR   REF tsportifs,
+  JOUR                  VARCHAR(10),
+  HORAIRE               REAL,
+  DUREE                 INTEGER
 );
 /
 CREATE TYPE tjouer AS OBJECT (
-  IDSPORTIF REF tsportifs,
-  IDSPORT REF tsport
+  IDSPORTIF         REF tsportifs,
+  IDSPORT           REF tsport
 );
 /
  
 CREATE TYPE tarbitrer AS OBJECT (
-  IDSPORTIF REF tsportifs,
-  IDSPORT REF tsport
+  IDSPORTIF         REF tsportifs,
+  IDSPORT           REF tsport
 );
 /
  
 CREATE TYPE tentrainer AS OBJECT (
-  IDSPORTIFENTRAINEUR REF tsportifs,
-  IDSPORT REF tsport
+  IDSPORTIFENTRAINEUR   REF tsportifs,
+  IDSPORT               REF tsport
 );
 /
 /*create table*/
